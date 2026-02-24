@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container{
+            width:100%;
+            height:100%;
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:space-around;
+            align-items:center;
+            background-color:gray;
+            gap:20px;
+            padding:10px;
+        }
+        .card{
+            width:200px;
+            height:300px;
+            background-color:rgb(255, 255, 255);
+            border-radius:10px;
+            justify-content: space-evenly;
+        }
+        .card img {
+            margin-top:30px;
+         width: 100%;
+        height: 200px;
+        }
+     .card p {
+    margin-top: 10px;
+    font-size: 14px;
+    text-align:center;
+    font-weight: bold;
+    font-size: 18px;
+     }    
+     .popupm{
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.6); 
+    display:none;
+    position:absolute; 
+     top:0;
+    left:0;
+} 
+
+.popupcon{
+    width:700px;
+    height:450px;
+    border:3px solid black;
+    background:white;
+    margin:80px auto;  
+    padding:20px;
+    position:relative;
+}
+.boxclose{
+    width:25px;
+    height:25px;
+    background:#ccc;
+    box-shadow:2px 2px 2px 2px gray;
+    border-radius: 2px;
+    position:absolute;
+    top:10px;
+    right:10px;
+    text-align:center;
+    padding-top: 5px;
+    font-weight:bold;
+}
+.popupcon img {
+  width:300px;
+  height:300px;
+  margin-bottom: 40px;
+}
+.popupcon h3{
+    font-size:30px;
+}
+@media(max-width:768px){
+    .popupcon{
+        width:500px;
+        height:450px;
+        display:block;
+    }
+}
+     </style>
+</head>
+<body>
+    <div class="container" id="products"></div>
+    <div class="popupm" id="pop">
+        <div class="popupcon">
+        <span class="boxclose" onclick="closepop()">X</span>
+        <h3 id="Titlep"></h3>
+        <h4 id="description"></h4>
+        <img id="imgp"></div>
+        </div>
+    <script>
+        productsData=[];
+        function genTable(data){
+            var box = document.getElementById("products");
+           box.innerHTML = "";
+           data.forEach(function(item){
+               var card=document.createElement("div");
+               card.className="card";
+               var img=document.createElement("img");
+               img.src=item.thumbnail;
+               var p=document.createElement("p");
+               p.innerHTML=item.title;
+               var description=document.createElement("h4");
+               description.innerHTML=item.description;
+               card.appendChild(img);
+               card.appendChild(p);
+               box.appendChild(card);
+               card.onclick=function(){
+                  document.getElementById("Titlep").innerHTML=item.title;
+                  document.getElementById("description").innerHTML=item.description;
+                   document.getElementById("imgp").src=img.src;
+                 document.getElementById("pop").style.display="block";
+               }
+            });
+        }
+              function closepop(){
+                  document.getElementById("pop").style.display="none";
+                  }
+        fetch("https://dummyjson.com/products")
+       .then(function(res){ return res.json(); })
+       .then(function(data){
+        productsData = data.products;
+        genTable(productsData);
+});
+    </script>
+</body>
+</html>
