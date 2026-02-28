@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+body{
+    font-family: Arial;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+    color:white;
+}
+
+.scoreboard{
+    background:#111;
+    padding:20px;
+    border-radius:15px;
+    width:600px;
+    text-align:center;
+}
+
+.teams{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+}
+
+.team{
+    width:600px;
+    background:#222;
+    padding:15px;
+    border-radius:10px;
+}                   
+.score{
+    font-size:40px;
+    margin:10px 0;
+}
+
+button{
+    margin:5px;
+    padding:5px 10px;
+    cursor:pointer;
+}
+
+select,input{
+    margin:5px;
+    padding:5px;
+}
+
+#MatchTime{
+    font-size:35px;
+    color:yellow;
+}
+
+ul{
+    text-align:left;
+    max-height:150px;
+    overflow:auto;
+}
+    </style>
+</head>
+<body>
+    <div class="scoreboard">
+        <h1>Football Match</h1>
+        <h2 id="MatchTime">00:00</h2>
+        <p id="match status">Match Not Started</p>
+        <button onclick="startmatch()">Start Match</button>
+        <button onclick="startExtraTime()">Start Extra Time</button>
+        <button onclick="reset()">Reset</button>
+        <div class="teams">
+            <div class="team">
+                <h2>Team A</h2>
+                <p class="score" id="score1">0</p>
+                <input type="text" id="newPlayer1" placeholder="Add Player">
+                <button onclick="addplayer(1)">Add </button>
+                <select id="players1">
+                    <option value="">Select Player</option>
+                </select>
+                <button onclick="addgoal(1)">Goal</button>
+                <button onclick="addcard(1,'Yellow')">Yellow</button>
+                <button onclick="addcard(1,'Red')">Red</button>
+                <p>🟨 <span id="yellow1">0</span> </t>| 🟥<span id="red1">0</span></p>
+            </div>
+           <div class="team">
+                <h2>Team B</h2>
+                <p class="score" id="score2">0</p>
+
+               <input type="text" id="newPlayer2" placeholder="Add Player">
+               <button onclick="addPlayer(2)">Add</button>
+
+                <br>
+
+                <select id="players2">
+                <option value="">Select Player</option>
+                </select>
+
+                <br>
+
+                <button onclick="addGoal(2)">Goal</button>
+                <button onclick="addCard(2,'Yellow')">Yellow</button>
+                <button onclick="addCard(2,'Red')">Red</button>
+
+              <p>🟨 <span id="yellow2">0</span> </t> | 🟥 <span id="red2">0</span></p>
+            </div>
+           </div> 
+           <h3>Match History</h3>
+           <ul id="history"></ul>
+        </div>
+    </div>
+    <script>
+        
+    </script>
+</body>
+</html>

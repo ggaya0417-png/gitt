@@ -18,16 +18,16 @@
         }
         .card{
             width:200px;
-            height:300px;
-            background-color:rgb(255, 255, 255);
+            height:350px;
+            background-color:rgb(186, 221, 238);
             border-radius:10px;
             justify-content: space-evenly;
         }
-        .card img {
+        /* .card img {
         margin-top:30px;
          width: 100%;
         height: 200px;
-        }
+        } */
      .card p {
     margin-top: 10px;
     font-size: 14px;
@@ -44,14 +44,19 @@
      top:0;
     left:0;
 } 
+.card h3,h4,h5,h6{
+    text-align:center;
+    font-size: 18px;
+    margin: 30px;
+}
 
 .popupcon{
     width:700px;
     height:450px;
     border:3px solid black;
-    background:white;
+    background:rgb(225, 168, 168);
     margin:80px auto;  
-    padding:20px;
+    padding-top:40px;
     position:relative;
 }
 .boxclose{
@@ -74,6 +79,10 @@
 }
 .popupcon h3{
     font-size:30px;
+    text-align: center;
+}
+.parent{
+    opacity:0.8;
 }
 @media(max-width:768px){
     .popupcon{
@@ -88,44 +97,51 @@
     <div class="container" id="products"></div>
     <div class="popupm" id="pop">
         <div class="popupcon">
-        <span class="boxclose" onclick="closepop()">X</span>
-        <h3 id="Titlep"></h3>
-        <h4 id="description"></h4>
-        <img id="imgp"></div>
+        <div class="parent"> <span class="boxclose" onclick="closepop()">X</span></div>
+        <h3 id="idp"></h3>
+        <h4 id="fnp"></h4>
+        <h5 id="lnp"></h5>
+        <h6 id="agep"></h6>
+</div>
         </div>
     <script>
         productsData=[];
-        function genTable(data){
+        function genUI(data){
             var box = document.getElementById("products");
            box.innerHTML = "";
            data.forEach(function(item){
                var card=document.createElement("div");
                card.className="card";
-               var img=document.createElement("img");
-               img.src=item.thumbnail;
-               var p=document.createElement("p");
-               p.innerHTML=item.title;
-               var description=document.createElement("h4");
-               description.innerHTML=item.description;
-               card.appendChild(img);
-               card.appendChild(p);
+               var id=document.createElement("h3");
+               id.innerHTML="Id:" +item.id;
+               var fn=document.createElement("h4");
+               fn.innerHTML="Firstname:" +item.firstName;
+               var age=document.createElement("h5");
+               age.innerText="Age:" +item.age;
+               var ln=document.createElement("h6");
+               ln.innerHTML="Lastname:"+item.lastName;
+               card.appendChild(fn);
+               card.appendChild(ln)
+               card.appendChild(age);
+               card.appendChild(id);
                box.appendChild(card);
                card.onclick=function(){
-                  document.getElementById("Titlep").innerHTML=item.title;
-                  document.getElementById("description").innerHTML=item.description;
-                   document.getElementById("imgp").src=img.src;
+                  document.getElementById("idp").innerHTML="Id:" +item.id;
+                  document.getElementById("fnp").innerHTML="Firstname:" +item.firstName;
+                   document.getElementById("lnp").innerHTML="Lastname:"+item.lastName;
+                   document.getElementById("agep").innerHTML="Age:" +item.age;
                  document.getElementById("pop").style.display="block";
                }
-            });
+          });
         }
               function closepop(){
                   document.getElementById("pop").style.display="none";
                   }
-        fetch("https://dummyjson.com/products")
+        fetch("https://dummyjson.com/users")
        .then(function(res){ return res.json(); })
        .then(function(data){
-        productsData = data.products;
-        genTable(productsData);
+        productsData = data.users;
+        genUI(productsData);
 });
     </script>
 </body>
