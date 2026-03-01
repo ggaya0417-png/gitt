@@ -1,322 +1,204 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Football Scoreboard Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Users Cards</title>
 
 <style>
 body{
-    font-family: Arial;
-    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    margin:0;
+    min-height:100vh;
+    background:url("res.jpg") center/cover no-repeat;
+    font-family:Segoe UI, Arial, sans-serif;
+}
+
+.container{
+    min-height:100vh;
     display:flex;
+    flex-wrap:wrap;
     justify-content:center;
     align-items:center;
-    height:100vh;
-    margin:0;
-    color:white;
+    gap:25px;
+    padding:30px;
+    transition:filter 0.4s ease;
 }
 
-.scoreboard{
-    background:#111;
-    padding:20px;
-    border-radius:15px;
-    width:600px;
+/* 🔥 BLUR WHEN POPUP OPENS */
+.container.blur{
+    filter:blur(6px);
+}
+
+/* CARD */
+.card{
+    width:200px;
+    height:350px;
+    background:#baddee;
+    border-radius:14px;
+    padding:10px;
     text-align:center;
-}
-
-.teams{
-    display:flex;
-    justify-content:space-between;
-    margin-top:20px;
-}
-
-.team{
-    width:48%;
-    background:#222;
-    padding:15px;
-    border-radius:10px;
-}
-
-.score{
-    font-size:40px;
-    margin:10px 0;
-}
-
-button{
-    margin:5px;
-    padding:5px 10px;
     cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    transition:transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-select,input{
-    margin:5px;
-    padding:5px;
+/* ✨ CARD SHADOW ANIMATION */
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 15px 30px rgba(0,0,0,0.25);
 }
 
-#matchTime{
-    font-size:35px;
-    color:yellow;
+.card img{
+    width:120px;
+    height:120px;
+    object-fit:cover;
+    border-radius:14px;
+    margin:12px auto;
+    display:block;
+    transition:0.4s ease;
 }
 
-ul{
-    text-align:left;
-    max-height:150px;
-    overflow:auto;
+/* 🔵 IMAGE CIRCLE ON HOVER */
+.card:hover img{
+    border-radius:50%;
+    transform:scale(1.08);
+}
+
+.card h3,h4,h5,h6{
+    margin:8px 0;
+}
+
+/* POPUP OVERLAY */
+.popupm{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    align-items:center;
+    justify-content:center;
+}
+
+/* 💫 SMOOTH POPUP */
+.popupcon{
+    width:600px;
+    background:#e1a8a8;
+    padding:25px;
+    border-radius:16px;
+    text-align:center;
+    position:relative;
+    transform:scale(0.85);
+    opacity:0;
+    transition:all 0.4s ease;
+}
+
+.popupm.show .popupcon{
+    transform:scale(1);
+    opacity:1;
+}
+
+.boxclose{
+    position:absolute;
+    top:12px;
+    right:15px;
+    cursor:pointer;
+    background:#eee;
+    padding:5px 10px;
+    border-radius:6px;
+    font-weight:bold;
+}
+
+.popupcon img{
+    width:240px;
+    height:240px;
+    object-fit:cover;
+    border-radius:14px;
+    margin:15px auto;
+    display:block;
+}
+
+@media(max-width:768px){
+    .popupcon{
+        width:90%;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="scoreboard">
+<div class="container" id="products"></div>
 
-<h1>Football Match</h1>
-<h2 id="matchTime">00:00</h2>
-<p id="matchStatus">Not Started</p>
-
-<button onclick="startMatch()">Start Match</button>
-<button onclick="startExtraTime()">Start Extra Time</button>
-<button onclick="resetMatch()">Reset</button>
-
-<div class="teams">
-
-<!-- TEAM A -->
-<div class="team">
-<h2>Team A</h2>
-<p class="score" id="score1">0</p>
-
-<input type="text" id="newPlayer1" placeholder="Add Player">
-<button onclick="addPlayer(1)">Add</button>
-
-<br>
-
-<select id="players1">
-<option value="">Select Player</option>
-</select>
-
-<br>
-
-<button onclick="addGoal(1)">Goal</button>
-<button onclick="addCard(1,'Yellow')">Yellow</button>
-<button onclick="addCard(1,'Red')">Red</button>
-
-<p>🟨 <span id="yellow1">0</span> | 🟥 <span id="red1">0</span></p>
-</div>
-
-<!-- TEAM B -->
-<div class="team">
-<h2>Team B</h2>
-<p class="score" id="score2">0</p>
-
-<input type="text" id="newPlayer2" placeholder="Add Player">
-<button onclick="addPlayer(2)">Add</button>
-
-<br>
-
-<select id="players2">
-<option value="">Select Player</option>
-</select>
-
-<br>
-
-<button onclick="addGoal(2)">Goal</button>
-<button onclick="addCard(2,'Yellow')">Yellow</button>
-<button onclick="addCard(2,'Red')">Red</button>
-
-<p>🟨 <span id="yellow2">0</span> | 🟥 <span id="red2">0</span></p>
-</div>
-
-</div>
-
-<h3>Match History</h3>
-<ul id="history"></ul>
-
+<div class="popupm" id="pop" onclick="outsideClose(event)">
+    <div class="popupcon">
+        <span class="boxclose" onclick="closepop()">X</span>
+        <img id="imgp">
+        <h3 id="idp"></h3>
+        <h4 id="fnp"></h4>
+        <h5 id="lnp"></h5>
+        <h6 id="agep"></h6>
+    </div>
 </div>
 
 <script>
+let productsData=[];
 
-// SCORE VARIABLES
-let score1=0, score2=0;
-let yellow1=0,yellow2=0;
-let red1=0,red2=0;
+function genUI(data){
+    let box=document.getElementById("products");
+    box.innerHTML="";
 
-// TIMER VARIABLES
-let minutes=0;
-let seconds=0;
-let timer=null;
-let half=1;
-let isBreak=false;
-let extraTime=false;
+    data.forEach(item=>{
+        let card=document.createElement("div");
+        card.className="card";
 
-// ADD PLAYER
-function addPlayer(team){
-let input=document.getElementById("newPlayer"+team);
-let name=input.value.trim();
-if(name==="") return alert("Enter player name");
+        card.innerHTML=`
+            <img src="${item.image}">
+            <h4>Firstname: ${item.firstName}</h4>
+            <h6>Lastname: ${item.lastName}</h6>
+            <h5>Age: ${item.age}</h5>
+            <h3>Id: ${item.id}</h3>
+        `;
 
-let option=document.createElement("option");
-option.value=name;
-option.textContent=name;
+        card.onclick=function(){
+            document.getElementById("imgp").src=item.image;
+            document.getElementById("idp").innerText="Id: "+item.id;
+            document.getElementById("fnp").innerText="Firstname: "+item.firstName;
+            document.getElementById("lnp").innerText="Lastname: "+item.lastName;
+            document.getElementById("agep").innerText="Age: "+item.age;
 
-document.getElementById("players"+team).appendChild(option);
-input.value="";
+            document.getElementById("pop").style.display="flex";
+            setTimeout(()=>{
+                document.getElementById("pop").classList.add("show");
+            },10);
+
+            document.querySelector(".container").classList.add("blur");
+        };
+
+        box.appendChild(card);
+    });
 }
 
-// START MATCH
-function startMatch(){
-if(timer!==null) return;
+function closepop(){
+    document.getElementById("pop").classList.remove("show");
+    document.querySelector(".container").classList.remove("blur");
 
-document.getElementById("matchStatus").innerText="First Half";
-
-timer=setInterval(runTimer,1000);
+    setTimeout(()=>{
+        document.getElementById("pop").style.display="none";
+    },300);
 }
 
-// RUN TIMER
-function runTimer(){
 
-seconds++;
-
-if(seconds===60){
-minutes++;
-seconds=0;
+function outsideClose(e){
+    if(e.target.id==="pop"){
+        closepop();
+    }
 }
 
-updateDisplay();
-
-// HALF TIME AT 45
-if(minutes===45 && half===1){
-clearInterval(timer);
-timer=null;
-startBreak();
-}
-}
-
-// HALF TIME BREAK (15 seconds demo instead 15 mins real)
-function startBreak(){
-isBreak=true;
-document.getElementById("matchStatus").innerText="Half Time Break";
-
-let breakTime=15; // demo (change to 900 for real 15 mins)
-
-let breakTimer=setInterval(()=>{
-breakTime--;
-document.getElementById("matchTime").innerText="Break: "+breakTime;
-
-if(breakTime===0){
-clearInterval(breakTimer);
-half=2;
-isBreak=false;
-document.getElementById("matchStatus").innerText="Second Half";
-timer=setInterval(runTimer,1000);
-}
-},1000);
-}
-
-// EXTRA TIME
-function startExtraTime(){
-if(minutes<90){
-alert("Match not finished yet");
-return;
-}
-
-extraTime=true;
-document.getElementById("matchStatus").innerText="Extra Time";
-if(timer===null)
-timer=setInterval(runTimer,1000);
-}
-
-// UPDATE DISPLAY
-function updateDisplay(){
-let m=minutes<10?"0"+minutes:minutes;
-let s=seconds<10?"0"+seconds:seconds;
-
-if(extraTime && minutes>=90){
-document.getElementById("matchTime").innerText="90+"+(minutes-90)+"'";
-}
-else{
-document.getElementById("matchTime").innerText=m+":"+s;
-}
-
-// FULL TIME AT 90
-if(minutes===90 && !extraTime){
-clearInterval(timer);
-timer=null;
-document.getElementById("matchStatus").innerText="Full Time";
-}
-}
-
-// ADD GOAL
-function addGoal(team){
-
-let select=document.getElementById("players"+team);
-let player=select.value;
-if(player==="") return alert("Select player");
-
-let timeText = minutes>=90 ? "90+"+(minutes-90)+"'" : minutes+"'";
-
-if(team===1){
-score1++;
-document.getElementById("score1").innerText=score1;
-}
-else{
-score2++;
-document.getElementById("score2").innerText=score2;
-}
-
-addHistory(timeText+" - "+player+" scored (Team "+team+")");
-}
-
-// ADD CARD
-function addCard(team,type){
-
-let select=document.getElementById("players"+team);
-let player=select.value;
-if(player==="") return alert("Select player");
-
-if(team===1){
-if(type==="Yellow"){yellow1++; document.getElementById("yellow1").innerText=yellow1;}
-else{red1++; document.getElementById("red1").innerText=red1;}
-}
-else{
-if(type==="Yellow"){yellow2++; document.getElementById("yellow2").innerText=yellow2;}
-else{red2++; document.getElementById("red2").innerText=red2;}
-}
-
-let timeText = minutes>=90 ? "90+"+(minutes-90)+"'" : minutes+"'";
-
-addHistory(timeText+" - "+player+" got "+type+" Card (Team "+team+")");
-}
-
-// ADD HISTORY
-function addHistory(text){
-let li=document.createElement("li");
-li.innerText=text;
-document.getElementById("history").appendChild(li);
-}
-
-// RESET MATCH
-function resetMatch(){
-clearInterval(timer);
-timer=null;
-
-score1=score2=0;
-yellow1=yellow2=0;
-red1=red2=0;
-minutes=seconds=0;
-half=1;
-extraTime=false;
-
-document.getElementById("score1").innerText=0;
-document.getElementById("score2").innerText=0;
-document.getElementById("yellow1").innerText=0;
-document.getElementById("yellow2").innerText=0;
-document.getElementById("red1").innerText=0;
-document.getElementById("red2").innerText=0;
-document.getElementById("history").innerHTML="";
-document.getElementById("matchTime").innerText="00:00";
-document.getElementById("matchStatus").innerText="Not Started";
-}
-
+fetch("https://dummyjson.com/users")
+.then(res=>res.json())
+.then(data=>{
+    productsData=data.users;
+    genUI(productsData);
+});
 </script>
 
 </body>

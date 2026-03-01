@@ -113,7 +113,162 @@ ul{
         </div>
     </div>
     <script>
+        let score1=0, score2=0;
+let yellow1=0,yellow2=0;
+let red1=0,red2=0;
+let minutes=0;
+let seconds=0;
+let timer=null;
+let half=1;
+let isBreak=false;
+let extraTime=false;
+
+        function addPlayer(team){
+            let input=document.getElementById("newPlayer"+team);
+            let name=input.value;
+            if(name==="") return alert("Enter player name");
+            let option=document.createElement("option")
+            option.value=name;
+            option.innerText=name;
+            document.getElementById("players"+team).appendChild(option);
+            input.value="";
+
+        }
+        function startmatch(){
+            if(timer!==null) return;
+            document.getElementById("matchStatus").innerText="First Half";
+        }
+        function runtimer(){
+            seconds++;
+            if(seconds===60){
+                minutes++;
+                seconds=0;
+            }
+            updateDisplay();
+            if(minutes===45&&half===1){
+                clearInterval(timer);
+                timer=null;
+                startBreak();
+            }
+        }
+        function startBreak(){
+            isBreak=true;
+            document.getElementById("matchStatus").innerText="Half Time Break";
+            let breakTime=15;
+            let breakTimer=setInterval(()=>{
+breakTime--;
+document.getElementById("matchTime").innerText="Break: "+breakTime;
+
+if(breakTime===0){
+clearInterval(breakTimer);
+half=2;
+isBreak=false;
+document.getElementById("matchStatus").innerText="Second Half";
+timer=setInterval(runTimer,1000);
+}
+},1000);
+}
+function startExtraTime(){
+if(minutes<90){
+alert("Match not finished yet");
+return;
+}
+extraTime=true;
+document.getElementById("matchStatus").innerText="Extra Time";
+if(timer===null)
+timer=setInterval(runTimer,1000);
+}
         
+        function addGoal(team){
+        let select=document.getElementById("players"+team);
+        let player=select.value;
+        if(player==="") return alert("Select player");
+
+        let timeText = minutes>=90 ? "90+"+(minutes-90)+"'" : minutes+"'";
+
+        if(team===1){
+        score1++;
+        document.getElementById("score1").innerText=score1;
+        }
+       else{
+       score2++;
+       document.getElementById("score2").innerText=score2;
+       }
+
+       addHistory(timeText+" - "+player+" scored (Team "+team+")");
+      }
+      function addCard(team,type){
+
+let select=document.getElementById("players"+team);
+let player=select.value;
+if(player==="") return alert("Select player");
+
+if(team===1){
+if(type==="Yellow"){yellow1++; document.getElementById("yellow1").innerText=yellow1;}
+else{red1++; document.getElementById("red1").innerText=red1;}
+}
+else{
+if(type==="Yellow"){yellow2++; document.getElementById("yellow2").innerText=yellow2;}
+else{red2++; document.getElementById("red2").innerText=red2;}
+}
+
+let timeText = minutes>=90 ? "90+"+(minutes-90)+"'" : minutes+"'";
+
+addHistory(timeText+" - "+player+" got "+type+" Card (Team "+team+")");
+}
+      function addHistory(text){
+let li=document.createElement("li");
+li.innerText=text;
+document.getElementById("history").appendChild(li);
+}
+function addCard(team,color){
+let select=document.getElementById("players"+team);
+let player=select.value;
+if(player==="") return alert("Select player");
+
+let timeText = minutes>=90 ? "90+"+(minutes-90)+"'" : minutes+"'";
+
+if(color==="yellow"){
+if(team===1){
+yellow1++;
+}
+else{
+yellow2++;
+}
+}
+else{
+if(team===1){
+red1++;
+}
+else{
+red2++;
+}
+}
+
+addHistory(timeText+" - "+player+" got a "+color+" card (Team "+team+")");
+}
+function resetMatch(){
+clearInterval(timer);
+timer=null;
+
+score1=score2=0;
+yellow1=yellow2=0;
+red1=red2=0;
+minutes=seconds=0;
+half=1;
+extraTime=false;
+
+document.getElementById("score1").innerText=0;
+document.getElementById("score2").innerText=0;
+document.getElementById("yellow1").innerText=0;
+document.getElementById("yellow2").innerText=0;
+document.getElementById("red1").innerText=0;
+document.getElementById("red2").innerText=0;
+document.getElementById("history").innerHTML="";
+document.getElementById("matchTime").innerText="00:00";
+document.getElementById("matchStatus").innerText="Not Started";
+}
+
     </script>
 </body>
 </html>
